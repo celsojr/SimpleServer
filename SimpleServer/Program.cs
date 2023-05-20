@@ -10,7 +10,7 @@
         static void Main(string[] args)
         {
             string baseUrl = "http://localhost:8080/";
-            string rootPath = Environment.CurrentDirectory;
+            string rootPath = args[0] ?? Environment.CurrentDirectory;
 
             HttpListener listener = new HttpListener();
             listener.Prefixes.Add(baseUrl); // port range may cause permission issues
@@ -28,6 +28,11 @@
                     requestedFile = "/index.html";
                 }
                 string filePath = Path.Combine(rootPath, requestedFile.TrimStart('/'));
+
+                if (Directory.Exists(filePath))
+                {
+                    filePath = Path.Combine(filePath, "index.html");
+                }
 
                 if (File.Exists(filePath))
                 {
